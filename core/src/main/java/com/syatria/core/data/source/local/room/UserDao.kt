@@ -19,7 +19,7 @@ interface UserDao {
     fun getFavUsers(): Flow<List<UserEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUsers(user: List<UserEntity>)
+    suspend fun insertUsers(user: List<UserEntity>)
 
     @Update
     fun updateFavoriteTourism(user: UserEntity)

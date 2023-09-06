@@ -10,7 +10,7 @@ class LocalDataResource(private val userDao: UserDao) {
 
     fun getFavUsers(): Flow<List<UserEntity>> = userDao.getFavUsers()
 
-    fun insertUsers(userList: List<UserEntity>) = userDao.insertUsers(userList)
+    suspend fun insertUsers(userList: List<UserEntity>) = userDao.insertUsers(userList)
 
     fun setFavUser(users: UserEntity, state: Boolean) {
         users.isFavorite = state

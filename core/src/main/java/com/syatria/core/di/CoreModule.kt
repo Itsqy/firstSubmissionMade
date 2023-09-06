@@ -23,7 +23,7 @@ val databaseModule = module {
         Room.databaseBuilder(
             androidContext(),
             UserDatabase::class.java, "user.db"
-        ).fallbackToDestructiveMigration().allowMainThreadQueries().build()
+        ).fallbackToDestructiveMigration().build()
 
     }
 }
