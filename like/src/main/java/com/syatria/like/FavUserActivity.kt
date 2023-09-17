@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.syatria.core.ui.UserAdapter
-import com.syatria.myapplication.databinding.ActivityFavUserBinding
+import com.syatria.like.databinding.ActivityFavUserBinding
 import com.syatria.myapplication.detail.DetailUserActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.loadKoinModules
