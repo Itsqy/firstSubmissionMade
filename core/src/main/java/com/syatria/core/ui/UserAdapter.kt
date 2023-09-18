@@ -1,10 +1,14 @@
 package com.syatria.core.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Nullable
 import androidx.core.app.ActivityOptionsCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,17 +16,21 @@ import com.syatria.core.R
 import com.syatria.core.databinding.ItemRowUsersBinding
 import com.syatria.core.domain.model.User
 
-class UserAdapter : RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
-    private var listData = ArrayList<User>()
-    var onItemClick: ((User) -> Unit)? = null
+class UserAdapter(private val onItemClick: (User) -> Unit) :
+    ListAdapter<User, UserAdapter.ListViewHolder>(DIFF_CALLBACK) {
 
 
-    fun setData(newListData: List<User>?) {
-        if (newListData == null) return
-        listData.clear()
-        listData.addAll(newListData)
-        notifyDataSetChanged()
-    }
+//    fun setData(newListData: List<User>?) {
+//        if (newListData == null) return
+//        val diffUtilCallback = DiffUtils(listData, newListData)
+//        val diffResult = DiffUtil.calculateDiff(diffUtilCallback)
+//        listData.clear()
+//        listData.addAll(newListData)
+////        diffResult.dispatchUpdatesTo(this)
+//        notifLyDataSetChanged()
+//
+//
+//    }
 
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,14 +42,19 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
                 tvUsername.text = data.name
                 tvCompany.text = data.status
 
+                itemView.setOnClickListener {
+                    onItemClick.invoke(data)
+
+                }
+
             }
         }
 
-        init {
-            binding.root.setOnClickListener {
-                onItemClick?.invoke(listData[adapterPosition])
-            }
-        }
+//        init {
+//            binding.root.setOnClickListener {
+//                onItemClick?.invoke(listData[adapterPosition])
+//            }
+//        }
 
     }
 
@@ -53,12 +66,60 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
         )
     }
 
-    override fun getItemCount(): Int {
-        return listData.size
-    }
+//    override fun getItemCount(): Int {
+//        return listData.size
+//    }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val data = listData[position]
+        val data = getItem(position)
         holder.bind(data)
     }
+
+    companion object {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<User> =
+            object : DiffUtil.ItemCallback<User>() {
+                override fun areItemsTheSame(
+                    oldUser: User, newUser: User
+                ): Boolean {
+                    return oldUser.userId == newUser.userId
+                }
+
+                @SuppressLint("DiffUtilEquals")
+                override fun areContentsTheSame(
+                    oldUser: User, newUser: User
+                ): Boolean {
+                    return oldUser == newUser
+                }
+            }
+    }
 }
+
+
+//class DiffUtils(
+//    private val mOldUserList: List<User>,
+//    private val mNewUserList: List<User>,
+//) :
+//    DiffUtil.Callback() {
+//    override fun getOldListSize(): Int {
+//        return mOldUserList.size
+//    }
+//
+//    override fun getNewListSize(): Int {
+//        return mNewUserList.size
+//    }
+//
+//    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+//        return mOldUserList[oldItemPosition].userId == mNewUserList[newItemPosition].userId
+//    }
+//
+//    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+//        val oldListUser = mOldUserList[oldItemPosition]
+//        val newListUser = mNewUserList[newItemPosition]
+//        return oldListUser.name == newListUser.name && oldListUser.userId == newListUser.userId
+//    }
+//
+//    @Nullable
+//    override fun getChangePayload(oldPosition: Int, newPosition: Int): Any? {
+//        return super.getChangePayload(oldPosition, newPosition)
+//    }
+//}

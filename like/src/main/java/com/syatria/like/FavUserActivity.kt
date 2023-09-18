@@ -20,23 +20,24 @@ class FavUserActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = "Favorite User"
         loadKoinModules(favModule)
-        val userAdapter = UserAdapter()
-        userAdapter.onItemClick = {
-            val intent = Intent(this, DetailUserActivity::class.java)
-            intent.putExtra(DetailUserActivity.EXTRA_DETAIL, it)
-            startActivity(intent)
-        }
+
 
         favViewModel.dataFavUser.observe(this@FavUserActivity) { favData ->
             if (favData != null) {
-                userAdapter.setData(favData)
+                val userAdapter = UserAdapter {
+                    val intent = Intent(applicationContext, DetailUserActivity::class.java)
+                    intent.putExtra(DetailUserActivity.EXTRA_DETAIL, it)
+                    startActivity(intent)
+                }
+                userAdapter.submitList(favData)
+                binding?.rvFavUsers?.apply {
+                    layoutManager = LinearLayoutManager(context)
+                    setHasFixedSize(true)
+                    adapter = userAdapter
+                }
             }
 
-            with(binding.rvFavUsers) {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = userAdapter
-            }
+
 
         }
     }

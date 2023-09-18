@@ -34,12 +34,13 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null) {
-            val userAdapter = UserAdapter()
-            userAdapter.onItemClick = {
+            val userAdapter = UserAdapter {
                 val intent = Intent(activity, DetailUserActivity::class.java)
                 intent.putExtra(DetailUserActivity.EXTRA_DETAIL, it)
                 startActivity(intent)
             }
+
+
             homeViewModel.user.observe(viewLifecycleOwner) { userData ->
                 if (userData != null) {
 
@@ -47,7 +48,13 @@ class HomeFragment : Fragment() {
                         when (userData) {
                             is Resource.Loading -> progressBar?.visibility = View.VISIBLE
                             is Resource.Success -> {
-                                userAdapter.setData(userData.data)
+                                userAdapter.submitList(userData.data)
+                                binding?.rvUserlist?.apply {
+                                    layoutManager = LinearLayoutManager(context)
+                                    setHasFixedSize(true)
+                                    adapter = userAdapter
+
+                                }
                                 progressBar?.visibility = View.GONE
                             }
 
@@ -62,15 +69,12 @@ class HomeFragment : Fragment() {
                         }
                     }
 
+                } else {
+                    Toast.makeText(context, "data null", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            with(binding?.rvUserlist) {
-                this?.layoutManager = LinearLayoutManager(context)
-                this?.setHasFixedSize(true)
-                this?.adapter = userAdapter
 
-            }
         }
     }
 
