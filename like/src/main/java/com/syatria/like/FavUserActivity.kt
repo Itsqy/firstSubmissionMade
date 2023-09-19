@@ -30,7 +30,7 @@ class FavUserActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 userAdapter.submitList(favData)
-                binding?.rvFavUsers?.apply {
+                binding.rvFavUsers?.apply {
                     layoutManager = LinearLayoutManager(context)
                     setHasFixedSize(true)
                     adapter = userAdapter
